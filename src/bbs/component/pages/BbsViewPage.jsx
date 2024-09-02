@@ -2,7 +2,8 @@ import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import Button from "../ui/Button";
 import { useNavigate, useParams } from "react-router-dom";
-import axios from "axios";
+//import axios from "axios";
+import api from "../api/axios";
 import TextInput from "../ui/TextInput";
 import CommentList from "../list/CommentList";
 
@@ -48,12 +49,27 @@ function BbsViewPage(props) {
     const navigate = useNavigate();
     const [ bbs, setBbs ] = useState({});
     const [ comment, setComment ] = useState('');
+    const [ comments, setComments ] = useState([]);
     
+    /* json-server 버전
     const getBbs = async() => {
         try {
-            const response = await axios.get(`http://localhost:8000/bbs/${id}`);
+            const response = await api.get(`bbs/${id}`);
             console.log("response data , " , response.data);
             setBbs(response.data);
+        } catch (err) {
+            console.log("get err , " , err);
+        }
+    };
+    */
+    // spring 버전
+    const getBbs = async() => {
+        try {
+            const response = await api.get(`bbs/view/${id}`);
+            console.log("response data , " , response.data);
+            setBbs(response.data);
+            console.log("response data comment, " , response.data.comment);
+            setComments(response.data.comment);
         } catch (err) {
             console.log("get err , " , err);
         }
@@ -61,7 +77,7 @@ function BbsViewPage(props) {
 
     useEffect( () => {
         getBbs();
-        getComments();
+        //getComments();
     }, []);
 
     const commentHandler = (event) => {
@@ -79,11 +95,11 @@ function BbsViewPage(props) {
             alert('내용을 입력해 주세요');
         } else {
             try {
-                const response = await axios.post(`http://localhost:8000/comments`, data);
+                const response = await api.post(`comments`, data);
                 setComment('');
                 console.log("debug >>> post result , " , response.data);
                 alert('정상처리 되었습니다.');
-                getComments();
+                //getComments();
             } catch (err) {
                 console.log("debug >>> axious post err , " , err);
             }
@@ -91,21 +107,22 @@ function BbsViewPage(props) {
     }
 
 
-    const [ comments, setComments ] = useState([]);
+    
+    /* json-server 버전
     const getComments = async() => {
         try {
-            //const response = await axios.get(`http://localhost:8000/comments?bbsId=${id}`);
-            const response = await axios.get(`http://localhost:8000/comments`);
+            //const response = await api.get(`comments?bbsId=${id}`);
+            const response = await api.get(`comments`);
             console.log("response data comments, " , response.data);
             setComments(response.data);
         } catch (err) {
             console.log("get err , " , err);
         }
     };
-
+    */
     const deleteBbs = async() => {
         try {
-            await axios.delete(`http://localhost:8000/bbs/${id}`);
+            await api.delete(`bbs/${id}`);
             alert('삭제되었습니다.');
             navigate('/') ;
         } catch( err ) {

@@ -3,7 +3,9 @@ import styled from "styled-components";
 import Button from "../ui/Button";
 import { useNavigate } from "react-router-dom";
 import BbsList from "../list/BbsList";
-import axios from "axios";
+//import axios from "axios";
+
+import api from "../api/axios";
 
 const Wrapper = styled.div`
     padding: 16px;
@@ -28,17 +30,30 @@ function HomePage() {
     const [bbs, setBbs] = useState([]);
 
     useEffect ( () => {
+        /* json-server 버전
         const getBbs = async() => {
             try{
-                const response = await axios.get(`http://localhost:8000/bbs`);
+                const response = await api.get(`bbs`);
                 console.log("debug >>> getBbs responseData , " , response.data);
                 setBbs(response.data);
             } catch (err){
                 console.log("debug >>> getBbs err , " , err);
             }
         };
+        */
         getBbs();
     }, [])
+
+    //spring 연결 버전
+    const getBbs = async() => {
+        try{
+            const response = await api.get(`bbs/index`);
+            console.log("debug >>> getBbs responseData , " , response.data);
+            setBbs(response.data);
+        } catch (err){
+            console.log("debug >>> getBbs err , " , err);
+        }
+    };
 
 
     return (

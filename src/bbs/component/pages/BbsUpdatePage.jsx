@@ -3,7 +3,8 @@ import styled from "styled-components";
 import TextInput from "../ui/TextInput";
 import Button from "../ui/Button";
 import { useNavigate, useParams } from "react-router-dom";
-import axios from "axios";
+//import axios from "axios";
+import api from "../api/axios";
 
 const Wrapper = styled.div`
     padding: 16px;
@@ -45,7 +46,7 @@ function BbsWritePage() {
     useEffect( () => {
         const patchBbs = async() => {
             try{
-                const response = await axios.get(`http://localhost:8000/bbs/${id}`);
+                const response = await api.get(`bbs/${id}`);
                 setTitle(response.data.title);
                 setContent(response.data.content);
 
@@ -60,7 +61,7 @@ function BbsWritePage() {
 
     const updateBbs = async() => {
         try {
-            await axios.patch(`http://localhost:8000/bbs/${id}`, {
+            await api.patch(`bbs/${id}`, {
                 title : title,
                 content : content
             });

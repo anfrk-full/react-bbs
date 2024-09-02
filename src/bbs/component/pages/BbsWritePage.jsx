@@ -3,7 +3,8 @@ import styled from "styled-components";
 import TextInput from "../ui/TextInput";
 import Button from "../ui/Button";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
+//import axios from "axios";
+import api from "../api/axios";
 
 const Wrapper = styled.div`
     padding: 16px;
@@ -36,7 +37,8 @@ function BbsWritePage() {
     const titleHandler = (event) => {
         setTitle(event.target.value);
     }
-
+    // json-server 버전
+    /*
     const createBbs = async() => {
         const data = {
             id : Date.now(),
@@ -45,12 +47,37 @@ function BbsWritePage() {
         }
 
         try{
-            const response = await axios.post(`http://localhost:8000/bbs`, data);
+            const response = await api.post(`bbs`, data);
             setTitle('');
             setContent('');
             console.log("debug >>> post result , " , response.data);
             alert("글 작성이 완료되었습니다.");
             navigate('/');
+        } catch (err){
+            console.log("debug >>> axious post err , " , err);
+        }
+    }
+    */
+
+    const createBbs = async() => {
+        const data = {
+            title : title,
+            content : content,
+        }
+
+        try{
+            const response = await api.post(`bbs/save`, data);
+            setTitle('');
+            setContent('');
+            console.log("debug >>> post result , " , response);
+            
+            if( response.status === 204) {
+                alert("제목과 내용을 입력해주세요.");
+            } else {
+                alert(response.data.info);
+                navigate('/');
+            }
+            
         } catch (err){
             console.log("debug >>> axious post err , " , err);
         }
