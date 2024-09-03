@@ -44,24 +44,53 @@ function BbsWritePage() {
     }
 
     useEffect( () => {
-        const patchBbs = async() => {
-            try{
-                const response = await api.get(`bbs/${id}`);
-                setTitle(response.data.title);
-                setContent(response.data.content);
-
-                setOriginTitle(response.data.title);
-                setOriginContent(response.data.content);
-            } catch (err) {
-                console.log(err);
-            }
-        }
         patchBbs();
     }, [])
+    /* json-server 버전
+    const patchBbs = async() => {
+        try{
+            const response = await api.get(`bbs/${id}`);
+            setTitle(response.data.title);
+            setContent(response.data.content);
 
+            setOriginTitle(response.data.title);
+            setOriginContent(response.data.content);
+        } catch (err) {
+            console.log(err);
+        }
+    }
+    */ 
+    // spring 버전 
+    const patchBbs = async() => {
+        try{
+            const response = await api.get(`bbs/view/${id}`);
+            setTitle(response.data.title);
+            setContent(response.data.content);
+
+            setOriginTitle(response.data.title);
+            setOriginContent(response.data.content);
+        } catch (err) {
+            console.log(err);
+        }
+    }
+    /* json-server 버전
     const updateBbs = async() => {
         try {
             await api.patch(`bbs/${id}`, {
+                title : title,
+                content : content
+            });
+            alert('수정이 완료되었습니다.');
+            navigate('/');
+        } catch (err){
+            console.log(err); 
+        }
+    }
+    */
+    // spring 버전
+    const updateBbs = async() => {
+        try {
+            await api.patch(`bbs/update/${id}`, {
                 title : title,
                 content : content
             });
